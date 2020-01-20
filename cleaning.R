@@ -109,14 +109,15 @@ CSEC_DATA_CLEAN = CSEC_DATA_CLEAN %>% mutate(rescued_csec = case_when( rescued_c
 CSEC_DATA_CLEAN = CSEC_DATA_CLEAN %>% mutate(family_counseling = case_when( family_counseling == "Received" ~ "1",
                                                                        TRUE ~ "0") )
 
-#provided_income
-#table(CSEC_DATA_CLEAN$provided_income, useNA = "always")
-#provided_income_options = csec_options %>% filter(field == "provided_income")
-CSEC_DATA_CLEAN = CSEC_DATA_CLEAN %>% mutate(provided_income = case_when( provided_income == "Disability support" ~ "3",
-                                                                          provided_income == "Mother support" ~ "4",
-                                                                          provided_income == "Pending Received child mothers support" ~ "5",
-                                                                          provided_income == "Support Package for children" ~ "6",
+#disability_support
+#table(CSEC_DATA_CLEAN$disability_support, useNA = "always")
+#disability_support_options = csec_options %>% filter(field == "disability_support")
+CSEC_DATA_CLEAN = CSEC_DATA_CLEAN %>% mutate(disability_support = case_when( disability_support == "Disability support" ~ "1",
+                                                                             disability_support == "Mother support" ~ "2",
+                                                                             disability_support == "Pending Received child mothers support" ~ "3",
+                                                                             disability_support == "Support Package for children" ~ "4",
                                                                        TRUE ~ "0") )
+
 
 #legal_support
 #table(CSEC_DATA_CLEAN$legal_support, useNA = "always")
@@ -161,6 +162,17 @@ CSEC_DATA_CLEAN = CSEC_DATA_CLEAN %>% mutate(family_training = case_when( family
 #family_income_options = csec_options %>% filter(field == "family_income")
 CSEC_DATA_CLEAN = CSEC_DATA_CLEAN %>% mutate(family_income = case_when( family_income == "Start kit" | family_income == "Start Kit" | family_income == "Start Up"  ~ "1",
                                                                        TRUE ~ "0") )
+
+#main_care_arrangement
+CSEC_DATA_CLEAN = CSEC_DATA_CLEAN %>% mutate(main_care_arrangement = case_when(legal_support == 1 ~ "1",
+                                                                               medical_care == 1 ~ "2",
+                                                                               family_counseling == 1 ~ "5",
+                                                                               rescued_csec == 1 ~ "7",
+                                                                               education_support == 1 ~ "8",
+                                                                               TRUE ~ "0" ))
+CSEC_DATA_CLEAN$counselling = NULL
+
+CSEC_DATA_CLEAN$org_id = 2
 
 write_csv(CSEC_DATA_CLEAN, here("/../CSEC_DATA_CLEAN.csv") )
 
